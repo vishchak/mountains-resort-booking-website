@@ -32,10 +32,6 @@ public class Image {
     private Activity activity;
 
     @ManyToOne
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
-
-    @ManyToOne
     @JoinColumn(name = "review_id")
     private Review review;
 }
