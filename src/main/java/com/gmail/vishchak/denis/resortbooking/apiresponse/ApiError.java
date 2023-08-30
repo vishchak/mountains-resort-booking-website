@@ -1,4 +1,4 @@
-package com.gmail.vishchak.denis.resortbooking.exception;
+package com.gmail.vishchak.denis.resortbooking.apiresponse;
 
 import java.time.LocalDateTime;
 

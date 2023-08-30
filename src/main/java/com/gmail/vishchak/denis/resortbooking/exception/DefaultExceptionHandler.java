@@ -1,6 +1,7 @@
 package com.gmail.vishchak.denis.resortbooking.exception;
 
 
+import com.gmail.vishchak.denis.resortbooking.apiresponse.ApiError;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.BadRequestException;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.InvalidCredentialsException;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.NoContentException;
