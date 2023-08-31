@@ -33,3 +33,4 @@ build/
 .vscode/
 /mvnw
 /mvnw.cmd
+/src/main/java/com/gmail/vishchak/denis/resortbooking/sampledata/

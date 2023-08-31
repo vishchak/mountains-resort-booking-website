@@ -28,36 +28,62 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     public Page<Accommodation> getAllAccommodations(Pageable pageable) {
+        log.info("Fetching all accommodations...");
         Page<Accommodation> accommodationPage = accommodationRepository.findAll(pageable);
 
-        if (accommodationPage.isEmpty()) throw new NoContentException("No accommodations found");
+        if (accommodationPage.isEmpty()) {
+            log.warn("No accommodations found.");
+            throw new NoContentException("No accommodations found");
+        }
 
+        log.info("Retrieved {} accommodations.", accommodationPage.getNumberOfElements());
         return accommodationPage;
     }
 
     @Override
     public Accommodation getAccommodationById(Long id) {
+        log.info("Fetching accommodation by ID: {}", id);
         return accommodationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Accommodation not found"));
+                .orElseThrow(() -> {
+                    log.error("Accommodation with ID {} not found.", id);
+                    return new NotFoundException("Accommodation not found");
+                });
     }
 
     @Override
     public Accommodation createAccommodation(Accommodation accommodation) {
-        return null;
+        log.info("Creating accommodation: {}", accommodation.getName());
+        return accommodationRepository.save(accommodation);
     }
 
     @Override
     public Accommodation updateAccommodation(Long id, Accommodation updatedAccommodation) {
-        return null;
+        log.info("Updating accommodation with ID {}: {}", id, updatedAccommodation.getName());
+        Accommodation accommodation = accommodationRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Accommodation with ID {} not found.", id);
+                    return new NotFoundException("Accommodation not found");
+                });
+
+        return accommodationRepository.save(accommodation);
     }
 
     @Override
     public void deleteAccommodation(Long id) {
+        log.info("Deleting accommodation with ID: {}", id);
+        Accommodation accommodation = accommodationRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Accommodation with ID {} not found.", id);
+                    return new NotFoundException("Accommodation not found");
+                });
 
+        accommodationRepository.delete(accommodation);
     }
 
     @Override
     public Page<Accommodation> searchAccommodationsByCriteria(SearchCriteria criteria, Pageable pageable) {
+        log.info("Searching accommodations by criteria: {}", criteria);
+
         Specification<Accommodation> specification = (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
