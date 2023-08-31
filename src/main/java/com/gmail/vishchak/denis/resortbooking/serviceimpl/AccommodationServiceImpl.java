@@ -1,5 +1,6 @@
 package com.gmail.vishchak.denis.resortbooking.serviceimpl;
 
+import com.gmail.vishchak.denis.resortbooking.exception.custom.BadRequestException;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.NoContentException;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.NotFoundException;
 import com.gmail.vishchak.denis.resortbooking.model.Accommodation;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +53,24 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
-    public Accommodation createAccommodation(Accommodation accommodation) {
+    public Accommodation createAccommodation(Accommodation accommodation, BindingResult bindingResult) {
         log.info("Creating accommodation: {}", accommodation.getName());
+
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException("Invalid accommodation data");
+        }
+
         return accommodationRepository.save(accommodation);
     }
 
     @Override
-    public Accommodation updateAccommodation(Long id, Accommodation updatedAccommodation) {
+    public Accommodation updateAccommodation(Long id, Accommodation updatedAccommodation, BindingResult bindingResult) {
         log.info("Updating accommodation with ID {}: {}", id, updatedAccommodation.getName());
+
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException("Invalid accommodation data");
+        }
+
         Accommodation accommodation = accommodationRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Accommodation with ID {} not found.", id);
