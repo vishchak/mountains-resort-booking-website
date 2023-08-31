@@ -10,10 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +28,15 @@ public class AccommodationController {
         List<AccommodationDTO> responseDtos = AccommodationMapper.mapPageToDtos(accommodations);
 
         ApiResponse<List<AccommodationDTO>> response = new ApiResponse<>(true, responseDtos, "Accommodations retrieved successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{accommodationId}")
+    public ResponseEntity<ApiResponse<AccommodationDTO>> getAccommodationById(@PathVariable Long accommodationId) {
+        Accommodation accommodation = accommodationService.getAccommodationById(accommodationId);
+        AccommodationDTO responseDto = AccommodationMapper.mapToDto(accommodation);
+
+        ApiResponse<AccommodationDTO> response = new ApiResponse<>(true, responseDto, "Accommodation with id" + accommodationId + "retrieved successfully");
         return ResponseEntity.ok(response);
     }
 }
