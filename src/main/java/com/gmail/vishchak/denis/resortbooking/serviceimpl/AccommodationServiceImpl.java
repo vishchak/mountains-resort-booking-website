@@ -4,8 +4,12 @@ import com.gmail.vishchak.denis.resortbooking.exception.custom.BadRequestExcepti
 import com.gmail.vishchak.denis.resortbooking.exception.custom.NoContentException;
 import com.gmail.vishchak.denis.resortbooking.exception.custom.NotFoundException;
 import com.gmail.vishchak.denis.resortbooking.model.Accommodation;
+import com.gmail.vishchak.denis.resortbooking.model.Image;
 import com.gmail.vishchak.denis.resortbooking.model.search.SearchCriteria;
 import com.gmail.vishchak.denis.resortbooking.repository.AccommodationRepository;
+import com.gmail.vishchak.denis.resortbooking.repository.AmenityRepository;
+import com.gmail.vishchak.denis.resortbooking.repository.ImageRepository;
+import com.gmail.vishchak.denis.resortbooking.repository.TagRepository;
 import com.gmail.vishchak.denis.resortbooking.service.AccommodationService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,10 @@ import java.util.List;
 public class AccommodationServiceImpl implements AccommodationService {
 
     private final AccommodationRepository accommodationRepository;
+    private final AmenityRepository amenityRepository;
+    private final TagRepository tagRepository;
+
+    private final ImageRepository imageRepository;
 
     @Override
     public Page<Accommodation> getAllAccommodations(Pageable pageable) {
@@ -60,6 +68,15 @@ public class AccommodationServiceImpl implements AccommodationService {
             throw new BadRequestException("Invalid accommodation data");
         }
 
+        amenityRepository.saveAll(accommodation.getAmenities());
+        tagRepository.saveAll(accommodation.getTags());
+
+        List<Image> images = accommodation.getImages();
+        if (images != null && !images.isEmpty()) {
+            images.forEach(image -> image.setAccommodation(accommodation));
+            imageRepository.saveAll(images);
+        }
+
         return accommodationRepository.save(accommodation);
     }
 
@@ -76,7 +93,7 @@ public class AccommodationServiceImpl implements AccommodationService {
                     log.error("Accommodation with ID {} not found.", id);
                     return new NotFoundException("Accommodation not found");
                 });
-
+//save brand-new amenities, tags, images
         return accommodationRepository.save(accommodation);
     }
 

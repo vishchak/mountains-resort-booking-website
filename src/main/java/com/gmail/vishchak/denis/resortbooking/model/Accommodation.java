@@ -33,7 +33,7 @@ public class Accommodation {
     @DecimalMin(value = "0.0", message = "Price must be greater than or equal to 0")
     private Double price;
 
-    @OneToMany(mappedBy = "accommodation")
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
     private List<Image> images;
 
     @OneToMany(mappedBy = "accommodation")
@@ -45,6 +45,7 @@ public class Accommodation {
             joinColumns = @JoinColumn(name = "accommodation_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @Size(min = 1, message = "At least one tag is required")
     private List<Tag> tags;
 
     @ManyToMany

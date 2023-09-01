@@ -5,11 +5,13 @@ import com.gmail.vishchak.denis.resortbooking.dto.AccommodationDTO;
 import com.gmail.vishchak.denis.resortbooking.mappers.AccommodationMapper;
 import com.gmail.vishchak.denis.resortbooking.model.Accommodation;
 import com.gmail.vishchak.denis.resortbooking.service.AccommodationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +39,18 @@ public class AccommodationController {
         AccommodationDTO responseDto = AccommodationMapper.mapToDto(accommodation);
 
         ApiResponse<AccommodationDTO> response = new ApiResponse<>(true, responseDto, "Accommodation with id" + accommodationId + "retrieved successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<ApiResponse<AccommodationDTO>> createAccommodation(@Valid @RequestBody AccommodationDTO request,
+                                                                             BindingResult bindingResult) {
+        Accommodation accommodation = AccommodationMapper.mapToObject(request);
+        accommodationService.createAccommodation(accommodation, bindingResult);
+
+        AccommodationDTO responseDto = AccommodationMapper.mapToDto(accommodation);
+
+        ApiResponse<AccommodationDTO> response = new ApiResponse<>(true, responseDto, "Accommodation with id " + accommodation.getId() + " has been added successfully");
         return ResponseEntity.ok(response);
     }
 }

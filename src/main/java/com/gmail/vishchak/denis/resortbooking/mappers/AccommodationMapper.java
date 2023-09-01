@@ -25,4 +25,15 @@ public class AccommodationMapper {
                 .map(AccommodationMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    public static Accommodation mapToObject(AccommodationDTO dto) {
+        return Accommodation.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .price(dto.getPrice())
+                .images(dto.getImages())
+                .tags(dto.getTags())
+                .amenities(dto.getAmenities())
+                .build();
+    }
 }

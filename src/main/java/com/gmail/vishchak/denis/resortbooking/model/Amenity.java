@@ -1,5 +1,6 @@
 package com.gmail.vishchak.denis.resortbooking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,6 @@ public class Amenity {
     private String name;
 
     @ManyToMany(mappedBy = "amenities")
+    @JsonIgnore
     private List<Accommodation> accommodations;
 }
