@@ -4,6 +4,7 @@ import com.gmail.vishchak.denis.resortbooking.apiresponse.ApiResponse;
 import com.gmail.vishchak.denis.resortbooking.dto.AccommodationDTO;
 import com.gmail.vishchak.denis.resortbooking.mappers.AccommodationMapper;
 import com.gmail.vishchak.denis.resortbooking.model.Accommodation;
+import com.gmail.vishchak.denis.resortbooking.model.search.SearchCriteria;
 import com.gmail.vishchak.denis.resortbooking.service.AccommodationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +88,24 @@ public class AccommodationController {
                 null,
                 "Accommodation with id " + id + " has been deleted successfully"
         );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<Accommodation>>> searchAccommodations(
+            @ModelAttribute SearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Accommodation> result = accommodationService.searchAccommodationsByCriteria(criteria, pageable);
+
+        ApiResponse<Page<Accommodation>> response = new ApiResponse<>(
+                true,
+                result,
+                "Accommodations searched successfully"
+        );
+
         return ResponseEntity.ok(response);
     }
 }
