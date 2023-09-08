@@ -29,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AccommodationServiceImpl implements AccommodationService {
-
     private final AccommodationRepository accommodationRepository;
     private final AmenityRepository amenityRepository;
     private final TagRepository tagRepository;
@@ -88,14 +87,33 @@ public class AccommodationServiceImpl implements AccommodationService {
             throw new BadRequestException("Invalid accommodation data");
         }
 
-        Accommodation accommodation = accommodationRepository.findById(id)
+        Accommodation accommodationToUpdate = accommodationRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Accommodation with ID {} not found.", id);
                     return new NotFoundException("Accommodation not found");
                 });
-//save brand-new amenities, tags, images
-        return accommodationRepository.save(accommodation);
+
+        accommodationToUpdate.setName(updatedAccommodation.getName());
+        accommodationToUpdate.setDescription(updatedAccommodation.getDescription());
+        accommodationToUpdate.setPrice(updatedAccommodation.getPrice());
+        accommodationToUpdate.setTags(updatedAccommodation.getTags());
+        accommodationToUpdate.setAmenities(updatedAccommodation.getAmenities());
+
+        amenityRepository.saveAll(accommodationToUpdate.getAmenities());
+        tagRepository.saveAll(accommodationToUpdate.getTags());
+
+        List<Image> images = updatedAccommodation.getImages();
+        if (images != null && !images.isEmpty()) {
+            accommodationToUpdate.getImages().clear(); // Clear the existing collection
+            accommodationToUpdate.getImages().addAll(images); // Add the new images
+
+            images.forEach(image -> image.setAccommodation(accommodationToUpdate));
+            imageRepository.saveAll(images);
+        }
+
+        return accommodationRepository.save(accommodationToUpdate);
     }
+
 
     @Override
     public void deleteAccommodation(Long id) {

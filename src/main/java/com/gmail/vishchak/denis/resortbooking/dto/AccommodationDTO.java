@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,10 +19,10 @@ public class AccommodationDTO {
     private String name;
     private String description;
     private Double price;
-    private List<Image> images;
-    private List<Tag> tags;
+    private List<Image> images = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 
-    private List<Amenity> amenities;
+    private List<Amenity> amenities = new ArrayList<>();
 
-    private List<Promotion> promotions;
+    private List<Promotion> promotions = new ArrayList<>();
 }

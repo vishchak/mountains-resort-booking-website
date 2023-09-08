@@ -43,14 +43,40 @@ public class AccommodationController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<AccommodationDTO>> createAccommodation(@Valid @RequestBody AccommodationDTO request,
-                                                                             BindingResult bindingResult) {
+    public ResponseEntity<ApiResponse<AccommodationDTO>> createAccommodation(
+            @Valid @RequestBody AccommodationDTO request,
+            BindingResult bindingResult
+    ) {
         Accommodation accommodation = AccommodationMapper.mapToObject(request);
         accommodationService.createAccommodation(accommodation, bindingResult);
 
         AccommodationDTO responseDto = AccommodationMapper.mapToDto(accommodation);
 
-        ApiResponse<AccommodationDTO> response = new ApiResponse<>(true, responseDto, "Accommodation with id " + accommodation.getId() + " has been added successfully");
+        ApiResponse<AccommodationDTO> response = new ApiResponse<>(
+                true,
+                responseDto,
+                "Accommodation with id " + accommodation.getId() + " has been added successfully"
+        );
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse<AccommodationDTO>> updateAccommodation(
+            @PathVariable Long id,
+            @Valid @RequestBody AccommodationDTO request,
+            BindingResult bindingResult
+    ) {
+        Accommodation accommodation = AccommodationMapper.mapToObject(request);
+        accommodationService.updateAccommodation(id, accommodation, bindingResult);
+
+        AccommodationDTO responseDto = AccommodationMapper.mapToDto(accommodation);
+
+        ApiResponse<AccommodationDTO> response = new ApiResponse<>(
+                true,
+                responseDto,
+                "Accommodation with id " + id + " has been updated successfully"
+        );
+        return ResponseEntity.ok(response);
+    }
+
 }

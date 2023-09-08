@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class Accommodation {
     @DecimalMin(value = "0.0", message = "Price must be greater than or equal to 0")
     private Double price;
 
-    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "accommodation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     private List<Image> images;
 
     @OneToMany(mappedBy = "accommodation")
