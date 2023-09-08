@@ -79,4 +79,14 @@ public class AccommodationController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteAccommodation(@PathVariable Long id) {
+        accommodationService.deleteAccommodation(id);
+        ApiResponse<Void> response = new ApiResponse<>(
+                true,
+                null,
+                "Accommodation with id " + id + " has been deleted successfully"
+        );
+        return ResponseEntity.ok(response);
+    }
 }
